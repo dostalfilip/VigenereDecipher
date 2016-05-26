@@ -1,5 +1,9 @@
+package VigenereCipher;
+
 import edu.duke.*;
 import java.util.*;
+
+import CaesarCipher.CaesarCipher;
 /***
  * 
  * @author Filip Dostal
