@@ -113,9 +113,56 @@ public class VigenereBreaker {
     	}
     	return decryption;
     }
+    
+    public char mostCommonCharIn(HashSet<String> dictionary){
+    	HashMap<Character, Integer> myMap = new HashMap<Character, Integer>(); 
+    	hashIntialization(myMap);
+    	/*
+    	 * Lambda in action
+    	 */
+    	dictionary.forEach(ch -> counter(ch,myMap));
+    	
+    	int top = 0;
+    	char output = 0;
+    	for(char n : myMap.keySet()){
+    		int curr = myMap.get(n);
+    		if(curr > top){
+    			top = curr;
+    			output = n;
+    		}
+    	}
+    	
+    	return output;
+    }
+    
+    /**
+     * initialization of anaplhabet
+     * @param myMap
+     */
+    private void hashIntialization(HashMap<Character, Integer> myMap){
+    	String analphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    	for(int i = 0 ; i < analphabet.length() ; i++){
+    		myMap.put(analphabet.charAt(i), 0);
+    	}
+    }
+    
+    /**
+     * This method count each letter in word, add them to the hash map
+     * @param word string
+     * @param myMap HashMap
+     */
+	private void counter(String word, HashMap<Character, Integer> myMap ){
+		word = word.toUpperCase();
+		for(int i = 0; i < word.length(); i++){
+			char curr = word.charAt(i);
+			if(myMap.containsKey(curr)){
+				myMap.put(curr, myMap.get(curr) + 1 );
+		
+			}
+		}
+	}
+
 }
-
-
 
 
 
