@@ -54,14 +54,77 @@ public class VigenereBreaker {
      * This void method should put everything together.
      */
     public void breakVigenere () {
-    	FileResource source = new FileResource();
-    	String input = source.asString();
-    	int[] key = tryKeyLength(input, 5, 'e');
-    	VigenereCipher cipher = new VigenereCipher(key);
-    	System.out.print(cipher.decrypt(input));
+		FileResource decrypt = new FileResource();
+		FileResource dictionary = new FileResource("././Dictionaries/English");
+		VigenereBreaker Obj = new VigenereBreaker();
+		System.out.println(Obj.breakForLanguage(decrypt.asString(),
+				Obj.readDictionary(dictionary)));
     }
     
+    /**
+     * 
+     * @param fr FileResource
+     * @return HashSet of word from dictionary
+     */
+    public HashSet<String> readDictionary(FileResource fr){
+    	HashSet<String> dictionary = new HashSet<String>();
+    	for(String n : fr.words()){
+    		dictionary.add(n);
+    	}
+    	return dictionary;
+    }
+
+    /**
+     * 
+     * @param message String
+     * @param dictionary a HashSet of Strings dictionary
+     * @return the integer count of how many valid words it found.
+     */
+    public int countWords(String message, HashSet<String> dictionary){
+    	int output = 0;
+    	String[] temp = message.split("\\W");
+    	for(String n : temp){
+    		if(dictionary.contains(n)){
+    			output++;
+    		}
+    	}
+    	return output;
+    }
+    
+    /**
+     * 	This method should figure out which decryption gives the largest count of real
+	 *	words, and return that String decryption.
+     * 
+     * @param encrypted
+     * @param dictionary
+     * @return
+     */
+    public String  breakForLanguage(String encrypted, HashSet<String> dictionary){
+    	String decryption = "";
+    	int mostWords = 0;
+
+    	for(int i = 1 ; i <= 100 ; i++){
+    		VigenereCipher ObjDecrypt = new VigenereCipher(tryKeyLength(encrypted,i,'e'));
+    		String temp = ObjDecrypt.decrypt(encrypted);
+    		if(countWords(temp,dictionary) > mostWords){
+    			decryption = temp;
+    			mostWords = countWords(temp,dictionary);
+    		}
+    	}
+    	return decryption;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
