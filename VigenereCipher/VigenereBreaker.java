@@ -102,9 +102,10 @@ public class VigenereBreaker {
     public String  breakForLanguage(String encrypted, HashSet<String> dictionary){
     	String decryption = "";
     	int mostWords = 0;
+    	char mostCommon = mostCommonCharIn(dictionary);
 
     	for(int i = 1 ; i <= 100 ; i++){
-    		VigenereCipher ObjDecrypt = new VigenereCipher(tryKeyLength(encrypted,i,'e'));
+    		VigenereCipher ObjDecrypt = new VigenereCipher(tryKeyLength(encrypted,i,Character.toLowerCase(mostCommon)));
     		String temp = ObjDecrypt.decrypt(encrypted);
     		if(countWords(temp,dictionary) > mostWords){
     			decryption = temp;
@@ -162,6 +163,32 @@ public class VigenereBreaker {
 		}
 	}
 
+	
+	public String breakForAllLanguages(String encrypted, HashMap<String,HashSet<String>> languages){
+		String[] toProceed = new String[languages.size()];
+		ArrayList<String> dictioKey = new ArrayList<String>();
+		for(String key : languages.keySet()){
+			dictioKey.add(key);
+		}
+
+		for(int i = 0; i<languages.size(); i++){
+			toProceed[i] = breakForLanguage(encrypted,languages.get(dictioKey.get(i)));
+			
+		}
+		/*
+		 * Find the best output
+		 */
+		int top = 0;
+		String output = "";
+		for(int find = 0; find < languages.size(); find++){
+			if(countWords(toProceed[find],languages.get(dictioKey.get(find))) > top){
+				top = countWords(toProceed[find],languages.get(dictioKey.get(find)));
+				output = toProceed[find];
+			}
+		}
+		
+		return output;
+	}
 }
 
 
