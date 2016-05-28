@@ -102,9 +102,10 @@ public class VigenereBreaker {
     public String  breakForLanguage(String encrypted, HashSet<String> dictionary){
     	String decryption = "";
     	int mostWords = 0;
+    	char mostCommon = mostCommonCharIn(dictionary);
 
     	for(int i = 1 ; i <= 100 ; i++){
-    		VigenereCipher ObjDecrypt = new VigenereCipher(tryKeyLength(encrypted,i,'e'));
+    		VigenereCipher ObjDecrypt = new VigenereCipher(tryKeyLength(encrypted,i,Character.toLowerCase(mostCommon)));
     		String temp = ObjDecrypt.decrypt(encrypted);
     		if(countWords(temp,dictionary) > mostWords){
     			decryption = temp;
@@ -113,9 +114,82 @@ public class VigenereBreaker {
     	}
     	return decryption;
     }
+    
+    public char mostCommonCharIn(HashSet<String> dictionary){
+    	HashMap<Character, Integer> myMap = new HashMap<Character, Integer>(); 
+    	hashIntialization(myMap);
+    	/*
+    	 * Lambda in action
+    	 */
+    	dictionary.forEach(ch -> counter(ch,myMap));
+    	
+    	int top = 0;
+    	char output = 0;
+    	for(char n : myMap.keySet()){
+    		int curr = myMap.get(n);
+    		if(curr > top){
+    			top = curr;
+    			output = n;
+    		}
+    	}
+    	
+    	return output;
+    }
+    
+    /**
+     * initialization of anaplhabet
+     * @param myMap
+     */
+    private void hashIntialization(HashMap<Character, Integer> myMap){
+    	String analphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    	for(int i = 0 ; i < analphabet.length() ; i++){
+    		myMap.put(analphabet.charAt(i), 0);
+    	}
+    }
+    
+    /**
+     * This method count each letter in word, add them to the hash map
+     * @param word string
+     * @param myMap HashMap
+     */
+	private void counter(String word, HashMap<Character, Integer> myMap ){
+		word = word.toUpperCase();
+		for(int i = 0; i < word.length(); i++){
+			char curr = word.charAt(i);
+			if(myMap.containsKey(curr)){
+				myMap.put(curr, myMap.get(curr) + 1 );
+		
+			}
+		}
+	}
+
+	
+	public String breakForAllLanguages(String encrypted, HashMap<String,HashSet<String>> languages){
+		String[] toProceed = new String[languages.size()];
+		ArrayList<String> dictioKey = new ArrayList<String>();
+		for(String key : languages.keySet()){
+			dictioKey.add(key);
+		}
+
+		for(int i = 0; i<languages.size(); i++){
+			toProceed[i] = breakForLanguage(encrypted,languages.get(dictioKey.get(i)));
+			
+		}
+		/*
+		 * Find the best output
+		 */
+		int top = 0;
+		String output = "";
+		for(int find = 0; find < languages.size(); find++){
+			if(countWords(toProceed[find],languages.get(dictioKey.get(find))) > top){
+				top = countWords(toProceed[find],languages.get(dictioKey.get(find)));
+				output = toProceed[find];
+			}
+		}
+		
+		return output;
+	}
 }
-
-
 
 
 
