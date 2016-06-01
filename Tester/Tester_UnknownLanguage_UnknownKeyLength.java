@@ -29,7 +29,8 @@ public class Tester_UnknownLanguage_UnknownKeyLength {
 		 * testing breakForAllLanguages method
 		 */
 		VigenereBreaker breaker = new VigenereBreaker();
-		FileResource encrypted = new FileResource("././Data/athens_keyflute.txt");
+		//FileResource encrypted = new FileResource("././Data/athens_keyflute.txt");
+		FileResource encrypted = new FileResource("././Messages/secretmessage3.txt");
 		
 		HashMap<String,HashSet<String>> languages = new HashMap<String,HashSet<String>>();
 		DirectoryResource dic = new DirectoryResource();
